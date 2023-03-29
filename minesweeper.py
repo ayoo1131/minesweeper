@@ -14,111 +14,45 @@ inputCSVFile = 'testCorner.csv'
 #Read the CSV file into a Dataframe
 df = pd.read_csv(inputCSVFile, header=None)
 
+#Create an object to represent center cells
+class centerCell:
+    def __init__(self,x,y):
+        self.x=x
+        self.y=y
+        
+        self.cellSymbol=df.at[x,y]
+        self.adjCells = {'TL':df.at[x-1, y-1],
+                'TC':df.at[x, y-1],
+                'TR':df.at[x+1, y-1],
+                'CL':df.at[x-1,y],
+                'CR':df.at[x+1,y],
+                'BL':df.at[x-1,y+1],
+                'BC':df.at[x,y+1],
+                'BR':df.at[x+1,y+1]}
+    
+        self.numUnknownAdjCells = 0
+        for key in self.adjCells:
+            if self.adjCells[key]=='?':
+                self.numUnknownAdjCells=self.numUnknownAdjCells+1
+
+
 gridRows = df.shape[0]-1
 gridColumns = df.shape[1] -1
 
-#Check each corner of the grid to see if it is a bomb
-topLeft = df.at[0, 0]
-topRight = df.at[0, gridColumns]
-bottomLeft = df.at[gridRows, 0]
-bottomRight = df.at[gridRows, gridColumns]
-if (topLeft=="1" or topRight=="1" or bottomLeft=="1" or bottomRight=="1"):
-
-    #If there is a 1 in the top left corner
-    if(topLeft=="1"): 
-        if(df.at[0, 1]=='?' or df.at[1, 1]=='?' or df.at[1, 0]=='?'):
-            numQuestion=0
-            if (df.at[0, 1]=='?'):
-                numQuestion+=1
-                
-            if (df.at[1, 1]=='?'):
-                numQuestion+=1
-                
-            if (df.at[1, 0]=='?'):
-                numQuestion+=1
-            
-            if(numQuestion==1):
-                print("There is a bomb at (1,1)")
-                df.values[0,0]='0'
-                df.values[0,1]='0'
-                df.values[1,0]='0'
-                df.values[1,1]='*'
-    
-    #If there is a 1 in the top left corner 
-    if (topRight=="1"):
-        if(df.at[0,gridColumns-1] == '?' or df.at[1,gridColumns-1] == '?' or df.at[1, gridColumns]=='?'):
-            numQuestion=0
-            if (df.at[0,gridColumns-1] =='?'):
-                numQuestion+=1
-                
-            if (df.at[1,gridColumns-1] =='?'):
-                numQuestion+=1
-                
-            if (df.at[1, gridColumns]=='?'):
-                numQuestion+=1
-                
-            if(numQuestion==1):
-                print("There is a bomb at (1,7)")
-                df.values[0,gridColumns]='0'
-                df.values[0,gridColumns-1]='0'
-                df.values[1,gridColumns]='0'
-                df.values[1,gridColumns-1]='*'   
-     
-    #If there is a 1 in the bottom left corner 
-    if(bottomLeft=="1"):
-        if(df.at[gridRows-1, 0] == '?' or df.at[gridRows-1, 1] == '?' or df.at[gridRows, 1] =='?'):
-            numQuestion=0
-            if (df.at[gridRows-1, 0] =='?'):
-                numQuestion+=1
-                
-            if (df.at[gridRows-1, 1] =='?'):
-                numQuestion+=1
-                
-            if (df.at[gridRows, 1] =='?'):
-                numQuestion+=1
-                
-            if(numQuestion==1):
-                print("There is a bomb at (7,1)")
-                df.values[gridRows-1, 0]='0'
-                df.values[gridRows, 0]='0'
-                df.values[gridRows, 1]='0'
-                df.values[gridRows-1, 1]='*'   
-        
-    #If there is a 1 in the bottom right corner     
-    if(bottomRight=="1"):
-        if(df.at[gridRows-1,gridColumns] == '?' or df.at[gridRows-1, gridColumns-1] == '?' or df.at[gridRows, gridColumns-1]=='?'):
-            numQuestion=0
-            if (df.at[gridRows-1,gridColumns] =='?'):
-                numQuestion+=1
-                
-            if (df.at[gridRows-1, gridColumns-1] =='?'):
-                numQuestion+=1
-                
-            if (df.at[gridRows, gridColumns-1] =='?'):
-                numQuestion+=1
-                
-            if(numQuestion==1):
-                print("There is a bomb at (7,7)")
-                df.values[gridRows-1, gridColumns]='0'
-                df.values[gridRows, gridColumns]='0'
-                df.values[gridRows, gridColumns-1]='0'
-                df.values[gridRows-1, gridColumns-1]='*'   
-        
-#Check the edge cells of the minesweeper board
-
-#Check the top edge
-for x in range (1, numColumns):
-    if (df.at[0,x] == '1'):
-        numQuestions=0
-        if df.at[0,x-1] == ''
-
-
+for x in range(1,gridRows-1):
+    for y in range(1, gridColumns-1):
+        value = df.at[x,y]
+        if value=='1':
+            currCell = centerCell(x,y)
+            print(currCell.adjCells)
+        print(value, end="\t")
+    print()
 
 end = time.time()
 
 print("The time elapsed is: ", (end-start) * 10**3, "ms")
 
-#Print the 
+#Print the raw format of dataframe
 for i in range(gridRows):#iterate over rows
     for j in range(gridColumns):#iterate over columns
         value = df.at[i,j]
