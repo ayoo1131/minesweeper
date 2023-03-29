@@ -1,0 +1,13 @@
+Outline to Solving Minesweeper:
+Map:
+	key(int 0-7 of adjacent cells) value(string position of the adjacent cells)
+Center cell Object:
+	member variables - 
+	int -  numAdjacentUnknownCells
+	map - key(int 0-7 of adjacent cells) value(symbol)
+	
+
+-First, loop through all the nonborder cells, if the cell is 1 and is adjacent to only 1 unknown cell, then that unknown cell is a bomb(corner bomb)
+	Pseudocode:loop through all the center cells, if the value==1, then create a center cell object. 
+
+
