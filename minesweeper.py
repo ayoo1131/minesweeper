@@ -14,23 +14,39 @@ inputCSVFile = 'testCorner.csv'
 #Read the CSV file into a Dataframe
 df = pd.read_csv(inputCSVFile, header=None)
 
+#Create an object to represent a coordinate on the board
+class coordinate:
+    def __hase__(self):
+        return hash(str(self))
+    def __init__(self, rowPos, columnPos):
+        self.x = columnPos
+        self.y = rowPos
+
+
 #Create an object to represent a center cell
 class centerCell:
     def __init__(self, rowPos, columnPos):
-        self.rowPos = rowPos
-        self.columnPos = columnPos
-        
+        self.currPos = coordinate(rowPos, columnPos)
 
         self.cellSymbol=df.at[rowPos, columnPos]
         self.adjCells = {
-                'Tl':df.at[rowPos-1, columnPos-1],
-                'TC':df.at[rowPos-1,  columnPos],
-                'TR':df.at[rowPos-1, columnPos+1],
-                'CL':df.at[rowPos, columnPos-1],
-                'CR':df.at[rowPos, columnPos+1],
-                'BL':df.at[rowPos+1, columnPos-1],
-                'BC':df.at[rowPos+1, columnPos],
-                'BR':df.at[rowPos+1, columnPos+1]
+                coordinate(rowPos-1, columnPos-1):df.at[rowPos-1, columnPos-1],
+                coordinate(rowPos-1, columnPos):df.at[rowPos-1, columnPos],
+                coordinate(rowPos-1, columnPos+1):df.at[rowPos-1, columnPos+1],
+                coordinate(rowPos, columnPos-1):df.at[rowPos, columnPos-1],
+                coordinate(rowPos, columnPos+1):df.at[rowPos, columnPos+1],
+                coordinate(rowPos+1, columnPos-1):df.at[rowPos+1, columnPos-1],
+                coordinate(rowPos+1, columnPos):df.at[rowPos+1, columnPos],
+                coordinate(rowPos+1, columnPos+1):df.at[rowPos+1, columnPos+1],
+                
+
+                #'TC':df.at[rowPos-1,  columnPos],
+                #'TR':df.at[rowPos-1, columnPos+1],
+                #'CL':df.at[rowPos, columnPos-1],
+                #'CR':df.at[rowPos, columnPos+1],
+                #'BL':df.at[rowPos+1, columnPos-1],
+                #'BC':df.at[rowPos+1, columnPos],
+                #'BR':df.at[rowPos+1, columnPos+1]
                 }
 
         self.numUnknownAdjCells = 0
@@ -47,7 +63,15 @@ for rowIter in range(1,gridRows-1):
         value = df.at[rowIter, columnIter]
         if value=='1':
             currCell = centerCell(rowIter, columnIter)
-            print(currCell.adjCells)
+            if (currCell.numUnknownAdjCells==1):
+                #print(currCell.adjCells)
+                print("there is a bomb at the unknown cell")
+                
+                for key,value in currCell.adjCells:
+                    if value=='?':
+                        print(key)
+                        #print("("+key.x+", "+key.y+")")
+
         print(value, end="\t")
     print()
 
