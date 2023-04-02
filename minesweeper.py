@@ -16,7 +16,7 @@ df = pd.read_csv(inputCSVFile, header=None)
 
 #Create an object to represent a coordinate on the board
 class coordinate:
-    def __hase__(self):
+    def __hash__(self):
         return hash(str(self))
     def __init__(self, rowPos, columnPos):
         self.x = columnPos
@@ -27,7 +27,6 @@ class coordinate:
 class centerCell:
     def __init__(self, rowPos, columnPos):
         self.currPos = coordinate(rowPos, columnPos)
-
         self.cellSymbol=df.at[rowPos, columnPos]
         self.adjCells = {
                 coordinate(rowPos-1, columnPos-1):df.at[rowPos-1, columnPos-1],
@@ -38,15 +37,6 @@ class centerCell:
                 coordinate(rowPos+1, columnPos-1):df.at[rowPos+1, columnPos-1],
                 coordinate(rowPos+1, columnPos):df.at[rowPos+1, columnPos],
                 coordinate(rowPos+1, columnPos+1):df.at[rowPos+1, columnPos+1],
-                
-
-                #'TC':df.at[rowPos-1,  columnPos],
-                #'TR':df.at[rowPos-1, columnPos+1],
-                #'CL':df.at[rowPos, columnPos-1],
-                #'CR':df.at[rowPos, columnPos+1],
-                #'BL':df.at[rowPos+1, columnPos-1],
-                #'BC':df.at[rowPos+1, columnPos],
-                #'BR':df.at[rowPos+1, columnPos+1]
                 }
 
         self.numUnknownAdjCells = 0
@@ -64,13 +54,12 @@ for rowIter in range(1,gridRows-1):
         if value=='1':
             currCell = centerCell(rowIter, columnIter)
             if (currCell.numUnknownAdjCells==1):
-                #print(currCell.adjCells)
                 print("there is a bomb at the unknown cell")
+               
+                bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
+                print("("+str(bomb.x)+", "+str(bomb.y)+")")
                 
-                for key,value in currCell.adjCells:
-                    if value=='?':
-                        print(key)
-                        #print("("+key.x+", "+key.y+")")
+                
 
         print(value, end="\t")
     print()
