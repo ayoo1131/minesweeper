@@ -82,8 +82,6 @@ for rowIter in range(1,gridRows-1):
             currCell = centerCell(rowIter, columnIter)
             if (currCell.numUnknownAdjCells==1):
                 bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
-                #print("("+str(bomb.x)+", "+str(bomb.y)+")")
-                #df.values[bomb.rowPos, bomb.columnPos] = '*'
                 cornerBomb(bomb.rowPos, bomb.columnPos)            
 
         print(value, end="\t")
