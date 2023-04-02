@@ -21,16 +21,16 @@ class centerCell:
         self.columnPos = columnPos
         
 
-        self.cellSymbol=df.at[columnPos, rowPos]
+        self.cellSymbol=df.at[rowPos, columnPos]
         self.adjCells = {
-                'Tl':df.at[columnPos-1, rowPos-1],
-                'TC':df.at[columnPos, rowPos-1],
-                'TR':df.at[columnPos+1, rowPos-1],
-                'CL':df.at[columnPos-1, rowPos],
-                'CR':df.at[columnPos+1, rowPos],
-                'BL':df.at[columnPos-1, rowPos+1],
-                'BC':df.at[columnPos, rowPos+1],
-                'BR':df.at[columnPos+1, rowPos+1]
+                'Tl':df.at[rowPos-1, columnPos-1],
+                'TC':df.at[rowPos-1,  columnPos],
+                'TR':df.at[rowPos-1, columnPos+1],
+                'CL':df.at[rowPos, columnPos-1],
+                'CR':df.at[rowPos, columnPos+1],
+                'BL':df.at[rowPos+1, columnPos-1],
+                'BC':df.at[rowPos+1, columnPos],
+                'BR':df.at[rowPos+1, columnPos+1]
                 }
 
         self.numUnknownAdjCells = 0
@@ -46,7 +46,7 @@ for rowIter in range(1,gridRows-1):
     for columnIter in range(1, gridColumns-1):
         value = df.at[rowIter, columnIter]
         if value=='1':
-            currCell = centerCell(columnIter, rowIter)
+            currCell = centerCell(rowIter, columnIter)
             print(currCell.adjCells)
         print(value, end="\t")
     print()
