@@ -14,22 +14,25 @@ inputCSVFile = 'testCorner.csv'
 #Read the CSV file into a Dataframe
 df = pd.read_csv(inputCSVFile, header=None)
 
-#Create an object to represent center cells
+#Create an object to represent a center cell
 class centerCell:
-    def __init__(self,x,y):
-        self.x=x
-        self.y=y
+    def __init__(self, rowPos, columnPos):
+        self.rowPos = rowPos
+        self.columnPos = columnPos
         
-        self.cellSymbol=df.at[x,y]
-        self.adjCells = {'TL':df.at[x-1, y-1],
-                'TC':df.at[x, y-1],
-                'TR':df.at[x+1, y-1],
-                'CL':df.at[x-1,y],
-                'CR':df.at[x+1,y],
-                'BL':df.at[x-1,y+1],
-                'BC':df.at[x,y+1],
-                'BR':df.at[x+1,y+1]}
-    
+
+        self.cellSymbol=df.at[columnPos, rowPos]
+        self.adjCells = {
+                'Tl':df.at[columnPos-1, rowPos-1],
+                'TC':df.at[columnPos, rowPos-1],
+                'TR':df.at[columnPos+1, rowPos-1],
+                'CL':df.at[columnPos-1, rowPos],
+                'CR':df.at[columnPos+1, rowPos],
+                'BL':df.at[columnPos-1, rowPos+1],
+                'BC':df.at[columnPos, rowPos+1],
+                'BR':df.at[columnPos+1, rowPos+1]
+                }
+
         self.numUnknownAdjCells = 0
         for key in self.adjCells:
             if self.adjCells[key]=='?':
@@ -39,11 +42,11 @@ class centerCell:
 gridRows = df.shape[0]-1
 gridColumns = df.shape[1] -1
 
-for x in range(1,gridRows-1):
-    for y in range(1, gridColumns-1):
-        value = df.at[x,y]
+for rowIter in range(1,gridRows-1):
+    for columnIter in range(1, gridColumns-1):
+        value = df.at[rowIter, columnIter]
         if value=='1':
-            currCell = centerCell(x,y)
+            currCell = centerCell(columnIter, rowIter)
             print(currCell.adjCells)
         print(value, end="\t")
     print()
