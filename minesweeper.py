@@ -18,13 +18,13 @@ inputCSVFile = 'beginner.csv'
 df = pd.read_csv(inputCSVFile, header=None)
 
 #called when there is a bomb at the coordinates provided
-def cornerBomb(bombRow, bombColumn):
+def oneBomb(bombRow, bombColumn):
     #place a bomb symbol in the entered coordinated
     df.values[bombRow, bombColumn]='*'
 
     #create a centerCell object at bomb location if it is not on the edge of the board
     if (bombRow>0 and bombRow<gridRows-1 and bombColumn>0 and bombColumn<gridColumns-1):
-        bombCell=centerCell(bombRow,bombColumn)
+        bombCell=cell.centerCell(bombRow, bombColumn, df)
 
         #create a list of cells where the symbol is greater than 1
         numberCells=[]
@@ -51,19 +51,19 @@ for i in range(gridRows):#iterate over rows
 print('-------------------------------')
 
 #Loop through the center cells
-for rowIter in range(1,gridRows-1):
+for rowIter in range(1, gridRows-1):
     for columnIter in range(1, gridColumns-1):
         value = df.at[rowIter, columnIter]
-        #If there is a bomb in corner edge
+        #Check for bombs in the corner cells
         if value=='1':
-            print("yo")
             currCell = cell.centerCell(rowIter, columnIter, df)
-            
             if (currCell.numUnknownAdjCells==1):
-                print ('yes')
                 #Find the cell that is the unknown cell that is the bomb
-                bomb = list(cell.currCell.adjCells.keys())[list(cell.currCell.adjCells.values()).index('?')]
-                cornerBomb(bomb.rowPos, bomb.columnPos)            
+                bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
+                oneBomb(bomb.rowPos, bomb.columnPos)            
+        
+       if value=='2':
+
 
         print(value, end="\t")
     print()

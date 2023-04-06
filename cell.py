@@ -6,11 +6,15 @@ class cell:
         self.currPos = coordinate.coordinate(rowPos, columnPos)
         self.cellSymbol=df.at[rowPos, columnPos]
         self.adjCells = {}
-
         self.numUnknownAdjCells = 0
+        
+    def calculateNumUnknownAdjCells(self):
+        unknownCells=0
         for key in self.adjCells:
             if self.adjCells[key]=='?':
-                self.numUnknownAdjCells=self.numUnknownAdjCells+1
+                unknownCells=unknownCells+1
+
+        return unknownCells
 
 #Child class to represent a center cell on the board
 class centerCell(cell):
@@ -26,4 +30,6 @@ class centerCell(cell):
                 coordinate.coordinate(rowPos+1, columnPos):df.at[rowPos+1, columnPos],
                 coordinate.coordinate(rowPos+1, columnPos+1):df.at[rowPos+1, columnPos+1],
                 }
+
+        self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
 
