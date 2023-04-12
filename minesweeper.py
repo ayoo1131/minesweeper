@@ -17,27 +17,53 @@ inputCSVFile = 'beginner.csv'
 #Read the CSV file into a Dataframe
 df = pd.read_csv(inputCSVFile, header=None)
 
+totalMines=10
+minesRemaining=totalMines
+
+def decrementAdjCells(mineCell):
+    #create a list of cells where the symbol is greater than or equal to 1
+    numberCells=[]
+    for key in mineCell.adjCells:
+        if (mineCell.adjCells[key] != '?' and mineCell.adjCells[key] != '*' and mineCell.adjCells[key] != '0'):
+            numberCells.append(key)
+    
+    #Loop through the list of numbered cells and decrement them on the dataframe
+    for coordinates in numberCells:
+        cellInt = int(df.at[coordinates.rowPos, coordinates.columnPos])
+        cellInt = cellInt-1
+        df.values[coordinates.rowPos, coordinates.columnPos] = str(cellInt)
+
 #called when there is a bomb at the coordinates provided
-def oneBomb(bombRow, bombColumn):
+def oneMine(mineRow, mineColumn):
     #place a bomb symbol in the entered coordinated
-    df.values[bombRow, bombColumn]='*'
+    df.values[mineRow, mineColumn]='*'
 
     #create a centerCell object at bomb location if it is not on the edge of the board
-    if (bombRow>0 and bombRow<gridRows-1 and bombColumn>0 and bombColumn<gridColumns-1):
-        bombCell=cell.centerCell(bombRow, bombColumn, df)
+    if mineRow>0 and mineRow<(gridRows-1) and mineColumn>0 and mineColumn<(gridColumns-1):
+        mineCell=cell.centerCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
 
-        #create a list of cells where the symbol is greater than 1
-        numberCells=[]
-        for key in bombCell.adjCells:
-            if (bombCell.adjCells[key] != '?' and bombCell.adjCells[key] != '*' and bombCell.adjCells[key] != '0'):
-                numberCells.append(key)
-                      
-        #Loop through the list of numbered cells and decrement them on the dataframe
-        for coordinates in numberCells:
-            cellInt = int(df.at[coordinates.rowPos, coordinates.columnPos])
-            cellInt = cellInt-1
-            df.values[coordinates.rowPos, coordinates.columnPos] = str(cellInt)
-                       
+    #Mine is in the top row, not the corners
+    elif mineRow==0 and mineColumn>0 and mineColumn<(gridColumns-1):
+        mineCell=cell.topEdgeCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+
+    #Mine is in the botton row, not the corners
+    elif mineRow==(gridRows-1) and mineColumn>0 and mineColumn<(gridColumns-1):
+        mineCell=cell.bottomEdgeCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+        
+    #Mine is in the left column, not the coernes
+    elif mineColumn==0 and mineRow>0 and (mineRow<gridRows-1):
+        mineCell=cell.leftEdgeCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+    
+    #Mine is in the right column, not the noerners
+    elif mineColumn==(gridColumns-1) and mineRow>0 and (mineRow<gridRows-1):
+        mineCell=cell.rightEdgeCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+
+        
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
 
@@ -60,13 +86,11 @@ for rowIter in range(1, gridRows-1):
             if (currCell.numUnknownAdjCells==1):
                 #Find the cell that is the unknown cell that is the bomb
                 bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
-                oneBomb(bomb.rowPos, bomb.columnPos)            
-        
-       if value=='2':
-
+                oneMine(bomb.rowPos, bomb.columnPos)
+                minesRemaining=minesRemaining-1
 
         print(value, end="\t")
-    print()
+    print("There are "+str(minesRemaining)+" mines left")
 
 end = time.time()
 
