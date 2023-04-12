@@ -48,7 +48,7 @@ class rightEdgeCell(cell):
 
 class leftEdgeCell(cell):
     def __init__(self, rowPos, columnPos, df):
-        super().__init__(rowPos, columPos, df)
+        super().__init__(rowPos, columnPos, df)
         self.adjCells = {
             coordinate.coordinate(rowPos-1, columnPos):df.at[rowPos-1, columnPos], #TM
             coordinate.coordinate(rowPos-1, columnPos+1):df.at[rowPos-1, columnPos+1], #TR

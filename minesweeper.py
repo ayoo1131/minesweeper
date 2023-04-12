@@ -63,6 +63,26 @@ def oneMine(mineRow, mineColumn):
         mineCell=cell.rightEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
 
+def findMines(cell):
+    #Given a cell, find the unknown cells that are the mines and decrement
+    #bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
+    mineCells=[]
+    
+    for coordinate in cell.adjCells.keys():
+        if (cell.adjCells[coordinate] == '?'):
+            mineCells.append(coordinate)
+
+    for coordinate in mineCells:
+        oneMine(coordinate.rowPos, coordinate.columnPos)
+
+
+    #for i in range(len(cell.adjCells)):
+    #    cell.adjCells.get(i)
+        
+    #print(bomb)
+    #oneMine(bomb.rowPos, bomb.columnPos)
+
+
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
 
@@ -79,15 +99,13 @@ print('-------------------------------')
 for rowIter in range(1, gridRows-1):
     for columnIter in range(1, gridColumns-1):
         value = df.at[rowIter, columnIter]
-        #Check for bombs in the corner cells
-        if value=='1':
+        if (value!='0' and value!='*' and value!='?'):
             currCell = cell.centerCell(rowIter, columnIter, df)
-            if (currCell.numUnknownAdjCells==1):
-                #Find the cell that is the unknown cell that is the bomb
-                bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
-                oneMine(bomb.rowPos, bomb.columnPos)
-                minesRemaining=minesRemaining-1
-
+            if (currCell.numUnknownAdjCells==int(value)):
+                findMines(currCell)
+                for i in range(int(value)):
+                    minesRemaining=minesRemaining-1
+                #Find the unknown cells that are the mines
         print(value, end="\t")
     print("There are "+str(minesRemaining)+" mines left")
 
