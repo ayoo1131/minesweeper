@@ -11,8 +11,8 @@ import coordinate
 start = time.time()
 
 #Input the file name of the CSV
-inputCSVFile = 'beginner.csv'
-#inputCSVFile = 'testCorner.csv'
+#inputCSVFile = 'beginner.csv'
+inputCSVFile = 'testCorner.csv'
 
 #Read the CSV file into a Dataframe
 df = pd.read_csv(inputCSVFile, header=None)
@@ -96,16 +96,40 @@ for i in range(gridRows):#iterate over rows
 print('-------------------------------')
 
 #Loop through the center cells
-for rowIter in range(1, gridRows-1):
-    for columnIter in range(1, gridColumns-1):
+
+
+#for rowIter in range(1, gridRows-1):
+for rowIter in range(0, gridRows):
+
+    #for columnIter in range(1, gridColumns-1):
+    for columnIter in range(0, gridColumns):
         value = df.at[rowIter, columnIter]
         if (value!='0' and value!='*' and value!='?'):
-            currCell = cell.centerCell(rowIter, columnIter, df)
+            if (rowIter==0 and columnIter==0):#Top Left Corner
+                currCell=cell.topLeftCell(rowIter, columnIter,df)
+            elif (rowIter==0 and columnIter==gridColumns-1):#Top Right
+                currCell=cell.topRightCell(rowIter, columnIter,df)
+            elif (rowIter==gridRows-1 and columnIter==0):#Bottom Left
+                currCell=cell.bottomLeftCell(rowIter, columnIter,df)
+            elif (rowIter==gridRows-1 and columnIter==gridColumns-1):#Bottom Right
+                currCell=cell.bottomRightCell(rowIter, columnIter,df)
+
+            elif (rowIter==0 and columnIter>0 and columnIter<gridColumns-1):#Top Edge
+                currCell=cell.topEdgeCell(rowIter, columnIter,df)
+            elif (rowIter==gridRows-1 and columnIter>0 and columnIter<gridColumns-1):#Bottom Edge
+                currCell=cell.bottomEdgeCell(rowIter, columnIter,df)
+            elif (rowIter>0 and rowIter<gridRows-1 and columnIter==0):#Left Edge
+                currCell=cell.leftEdgeCell(rowIter, columnIter,df)
+            elif (rowIter>0 and rowIter<gridRows-1 and columnIter==gridColumns-1):#Right Edge
+                currCell=cell.rightEdgeCell(rowIter, columnIter,df)
+
+            else:
+                currCell=cell.centerCell(rowIter, columnIter,df)
+                
             if (currCell.numUnknownAdjCells==int(value)):
                 findMines(currCell)
                 for i in range(int(value)):
                     minesRemaining=minesRemaining-1
-                #Find the unknown cells that are the mines
         print(value, end="\t")
     print("There are "+str(minesRemaining)+" mines left")
 
