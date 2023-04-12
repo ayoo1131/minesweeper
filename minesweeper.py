@@ -63,7 +63,6 @@ def oneMine(mineRow, mineColumn):
         mineCell=cell.rightEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
 
-        
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
 

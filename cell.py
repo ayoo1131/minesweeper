@@ -83,4 +83,44 @@ class bottomEdgeCell(cell):
         self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
 
    
+class topLeftCell(cell):
+    def __init__(self,rowPos, columnPos,df):
+        super().__init__(rowPos, columnPos, df)
+        self.adjCells={
+            coordinate.coordinate(rowPos, columnPos+1):df.at[rowPos, columnPos+1], #CR
+            coordinate.coordinate(rowPos+1, columnPos):df.at[rowPos+1, columnPos], #BM
+            coordinate.coordinate(rowPos+1, columnPos+1):df.at[rowPos+1, columnPos+1], #BR
+            }
+        self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
+        
+
+class topRightCell(cell):
+    def __init__(self,rowPos, columnPos,df):
+        super().__init__(rowPos, columnPos, df)
+        self.adjCells={
+            coordinate.coordinate(rowPos, columnPos-1):df.at[rowPos, columnPos-1], #CL
+            coordinate.coordinate(rowPos+1, columnPos-1):df.at[rowPos+1, columnPos-1], #BL
+            coordinate.coordinate(rowPos+1, columnPos):df.at[rowPos+1, columnPos], #BM
+            }
+        self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
+
+class bottomLeftCell(cell):
+    def __init__(self,rowPos, columnPos,df):
+        super().__init__(rowPos, columnPos, df)
+        self.adjCells={
+            coordinate.coordinate(rowPos-1, columnPos):df.at[rowPos-1, columnPos], #TM
+            coordinate.coordinate(rowPos-1, columnPos+1):df.at[rowPos-1, columnPos+1], #TR
+            coordinate.coordinate(rowPos, columnPos+1):df.at[rowPos, columnPos+1], #CR
+            }
+        self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
+
+class bottomRightCell(cell):
+    def __init__(self,rowPos, columnPos,df):
+        super().__init__(rowPos, columnPos, df)
+        self.adjCells={
+            coordinate.coordinate(rowPos-1, columnPos-1):df.at[rowPos-1, columnPos-1], #TL
+            coordinate.coordinate(rowPos-1, columnPos):df.at[rowPos-1, columnPos], #TM
+            coordinate.coordinate(rowPos, columnPos-1):df.at[rowPos, columnPos-1], #CL
+            }
+        self.numUnknownAdjCells = self.calculateNumUnknownAdjCells()
 
