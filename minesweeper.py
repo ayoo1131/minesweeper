@@ -38,7 +38,7 @@ def oneMine(mineRow, mineColumn):
     #place a bomb symbol in the entered coordinated
     df.values[mineRow, mineColumn]='*'
 
-    #create a centerCell object at bomb location if it is not on the edge of the board
+    #create a centerCell object at mine location if it is in a center cell
     if mineRow>0 and mineRow<(gridRows-1) and mineColumn>0 and mineColumn<(gridColumns-1):
         mineCell=cell.centerCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
@@ -47,25 +47,38 @@ def oneMine(mineRow, mineColumn):
     elif mineRow==0 and mineColumn>0 and mineColumn<(gridColumns-1):
         mineCell=cell.topEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
-
     #Mine is in the botton row, not the corners
     elif mineRow==(gridRows-1) and mineColumn>0 and mineColumn<(gridColumns-1):
         mineCell=cell.bottomEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
-        
-    #Mine is in the left column, not the coernes
+    #Mine is in the left column, not the corners
     elif mineColumn==0 and mineRow>0 and (mineRow<gridRows-1):
         mineCell=cell.leftEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
-    
-    #Mine is in the right column, not the noerners
+    #Mine is in the right column, not the corners
     elif mineColumn==(gridColumns-1) and mineRow>0 and (mineRow<gridRows-1):
         mineCell=cell.rightEdgeCell(mineRow, mineColumn, df)
         decrementAdjCells(mineCell)
 
+    #Mine is in the top left corner
+    elif mineRow==0 and mineColumn==0:
+        mineCell=cell.topLeftCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+    #Top Right
+    elif mineRow==0 and mineColumn==gridColumns-1:
+        mineCell=cell.topLeftCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+    # Bottom Left
+    elif mineRow==mineRow-1 and mineColumn==0:
+        mineCell=cell.topLeftCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+    #Bottom Right
+    elif mineRow==mineRow-1 and mineColumn==gridColumns-1:
+        mineCell=cell.topLeftCell(mineRow, mineColumn, df)
+        decrementAdjCells(mineCell)
+
 def findMines(cell):
     #Given a cell, find the unknown cells that are the mines and decrement
-    #bomb = list(currCell.adjCells.keys())[list(currCell.adjCells.values()).index('?')]
     mineCells=[]
     
     for coordinate in cell.adjCells.keys():
@@ -74,14 +87,7 @@ def findMines(cell):
 
     for coordinate in mineCells:
         oneMine(coordinate.rowPos, coordinate.columnPos)
-
-
-    #for i in range(len(cell.adjCells)):
-    #    cell.adjCells.get(i)
-        
-    #print(bomb)
-    #oneMine(bomb.rowPos, bomb.columnPos)
-
+    return mineCells
 
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
@@ -95,13 +101,7 @@ for i in range(gridRows):#iterate over rows
 
 print('-------------------------------')
 
-#Loop through the center cells
-
-
-#for rowIter in range(1, gridRows-1):
 for rowIter in range(0, gridRows):
-
-    #for columnIter in range(1, gridColumns-1):
     for columnIter in range(0, gridColumns):
         value = df.at[rowIter, columnIter]
         if (value!='0' and value!='*' and value!='?'):
@@ -123,15 +123,15 @@ for rowIter in range(0, gridRows):
             elif (rowIter>0 and rowIter<gridRows-1 and columnIter==gridColumns-1):#Right Edge
                 currCell=cell.rightEdgeCell(rowIter, columnIter,df)
 
-            else:
+            else:#Center Cell
                 currCell=cell.centerCell(rowIter, columnIter,df)
-                
+            
+            #If the value of the cell is equal to the number of adjacent unknown cells, then there are mines in the unknown cells    
             if (currCell.numUnknownAdjCells==int(value)):
-                findMines(currCell)
+                mineCoordinates=findMines(currCell)
                 for i in range(int(value)):
                     minesRemaining=minesRemaining-1
-        print(value, end="\t")
-    print("There are "+str(minesRemaining)+" mines left")
+            
 
 end = time.time()
 
