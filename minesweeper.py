@@ -89,6 +89,20 @@ def findMines(cell):
         oneMine(coordinate.rowPos, coordinate.columnPos)
     return mineCells
 
+def check121Mine(cell):
+    currRow = cell.currPos.rowPos
+    currColumn = cell.currPos.columnPos
+    
+    topCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
+    bottomCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
+    leftCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
+    rightCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
+    
+
+    if (cell.adjCells[])
+
+
+
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
 
@@ -131,6 +145,10 @@ for rowIter in range(0, gridRows):
                 mineCoordinates=findMines(currCell)
                 for i in range(int(value)):
                     minesRemaining=minesRemaining-1
+           
+            #If there is a 1-2-1 mine placement situation, check and assign mines accordingly
+            if(int(value) == 2):
+                check121Mine(currCell)
             
 
 end = time.time()
