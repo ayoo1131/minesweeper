@@ -94,14 +94,35 @@ def check121Mine(cell):
     currColumn = cell.currPos.columnPos
     
     topCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
-    bottomCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
-    leftCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
-    rightCellCoordinate = coordinate.coordinate(currRow-1,currColumn)
+    bottomCellCoordinate = coordinate.coordinate(currRow+1,currColumn)
+    leftCellCoordinate = coordinate.coordinate(currRow,currColumn-1)
+    rightCellCoordinate = coordinate.coordinate(currRow,currColumn+1)
     
+    #Vertical 1-2-1 Mine pattern detected
+    if (cell.adjCells.get(topCellCoordinate)=='1' and cell.adjCells.get(bottomCellCoordinate)=='1'):
 
-    if (cell.adjCells[])
+        #Mines top left and bottom left
+        if (cell.adjCells.get(leftCellCoordinate)=='?'):
+            oneMine(currRow-1,currColumn-1)
+            oneMine(currRow+1, currColumn-1)
 
+        #Mines top right and bottom right
+        elif (cell.adjCells.get(rightCellCoordinate)=='?'):
+            oneMine(currRow-1, currColumn+1)
+            oneMine(currRow+1, currColumn+1)
 
+    #Horizontal 1-2-1 Mine pattern detected
+    elif (cell.adjCells.get(leftCellCoordinate)=='1' and cell.adjCells.get(rightCellCoordinate)=='1'):
+
+        #Mines at top left and top right
+        if (cell.adjCells.get(topCellCoordinate)=='?'):
+            oneMine(currRow-1, currColumn-1)
+            oneMine(currRow-1, currRow+1)
+
+        #Mines at bottom left and bottom right
+        elif (cell.adjCells.get(bottomCellCoordinate)=='?'):
+            oneMine(currRow+1, currColumn-1)
+            oneMine(currRow+1, currColumn+1)
 
 gridRows = df.shape[0]
 gridColumns = df.shape[1]
@@ -149,7 +170,7 @@ for rowIter in range(0, gridRows):
             #If there is a 1-2-1 mine placement situation, check and assign mines accordingly
             if(int(value) == 2):
                 check121Mine(currCell)
-            
+                            
 
 end = time.time()
 
