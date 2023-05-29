@@ -4,7 +4,8 @@ import sys
 from PIL import Image
 
 #read in the image file from the repo
-image = cv2.imread(cv2.samples.findFile("Beginner.png"))
+inputFileName = 'Beginner.png'
+image = cv2.imread(cv2.samples.findFile(inputFileName))
 originalImage=image
 if image is None:
     sys.exit("Could not read the image")
@@ -14,10 +15,10 @@ image_gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY) #Apply gray scale to image
 ret, thresh = cv2.threshold(image_gray, 200, 255, cv2.THRESH_BINARY)#
 image_gray[thresh == 255] = 100
 
-image_blur = cv2.GaussianBlur(image_gray, (5,5), 0) #Remove noise from image
+image_blur = cv2.GaussianBlur(image_gray, (5,5), 0) #Remove noise from image and blur the image
 image_thresh = cv2.adaptiveThreshold(image_blur, 255, 1, 1, 11, 2) #From the tutorial
 
-image_test = image_thresh
+image_test = image_thresh 
 contours, heirarchy = cv2.findContours(image_test, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
 max_area = 0
